@@ -123,6 +123,31 @@ class searching
                 }
             }
 
+            if ($value_q['type']=='name_and_email') 
+                {   
+                        $attachment=array();
+                        $search_col_name = explode(',',$value_q['search_col_name']);
+                        if(!empty($data['email']))
+                        {
+                            foreach ($search_col_name as $key1 => $value1) 
+                            {    
+                                array_push($attachment,'('.$value1.' LIKE "%'.$email.'%")'); 
+                            }
+                        } else {
+                            foreach ($expert_and_company as $key => $value) 
+                            {
+                                foreach ($search_col_name as $key1 => $value1) 
+                                {    
+                                    array_push($attachment,'('.$value1.' LIKE "%'.$value.'%")'); 
+                                }
+                            }
+                        }
+                        $append_string_in_sql=implode(' OR ', $attachment);
+                        $query='SELECT '.$value_q['get_colms'].' FROM '.$value_q['table_name'].' WHERE '.$append_string_in_sql.'';
+                        array_push($query_array, $query);
+                        array_push($get_ids,$value_q['get_id']); 
+                }
+
         }
            
         $data['sub_querys']=$query_array;
